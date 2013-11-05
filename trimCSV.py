@@ -1,3 +1,11 @@
+'''
+trimCSV.py
+Shelly Bagchi
+-----
+This program takes an input CSV file of diabetes sensor data and trims it.
+Rows of data that contain inf values or CGM = 0, -1 values are removed.
+'''
+
 import csv
 
 #with open('DataFile103.csv', 'rb') as csvfile:
@@ -27,7 +35,9 @@ print len(csvData), "rows in csvData"
 i = 0
 j = 0
 csvData_trimmed = []
-for k in range(len(csvData)):
+#csvData_trimmed.append([Time (GMT-07:00),Transverse accel - peaks,Forward accel - peaks,Longitudinal accel - peaks,Forward accel - point,Transverse accel - point,Longitudinal accel - point,Skin temp - average,Transverse accel - average,Longitudinal accel - average,Near-body temp - average,Transverse accel - MAD,Longitudinal accel - MAD,Step Counter,Forward accel - average,Forward accel - MAD,GSR - average,Lying down,Sleep,Physical Activity,Energy expenditure,Sedentary,Moderate,Vigorous,Very Vigorous,METs,Heart Rate,CGM])
+csvData_trimmed.append(['Time (GMT-07:00)', 'Transverse accel - peaks', 'Forward accel - peaks', 'Longitudinal accel - peaks', 'Forward accel - point', 'Transverse accel - point', 'Longitudinal accel - point', 'Skin temp - average', 'Transverse accel - average', 'Longitudinal accel - average', 'Near-body temp - average', 'Transverse accel - MAD', 'Longitudinal accel - MAD', 'Step Counter', 'Forward accel - average', 'Forward accel - MAD', 'GSR - average', 'Lying down', 'Sleep', 'Physical Activity', 'Energy expenditure', 'Sedentary', 'Moderate', 'Vigorous', 'Very Vigorous', 'METs', 'Heart Rate', 'CGM'])
+for k in range(1,len(csvData)):
     row = csvData[k]
     if 'inf' in row:
         i += 1
@@ -46,7 +56,7 @@ print "Removed", i, "inf rows"
 print "Removed", j, "CGM = -1 rows"
 print "Now", len(csvData_trimmed), "rows in csvData_trimmed"
 
-#print csvData[2]
+#print csvData[0][0]
 #print csvData_trimmed[2]
 
 for row in csvData_trimmed:
