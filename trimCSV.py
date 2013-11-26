@@ -7,11 +7,14 @@ Rows of data that contain inf values or CGM = 0, -1 values are removed.
 '''
 
 import csv
+import sys
 
 #with open('DataFile103.csv', 'rb') as csvfile:
 #    csvReader = csv.reader(csvfile, dialect='excel')
 
-filename = 'MYFILE101.no_gaps'
+assert len(sys.argv) == 2, 'Please provide a filename, e.g. MYFILE101.no_gaps.'
+filename = str(sys.argv[1])
+#filename = 'MYFILE101.no_gaps'
 print "----- Trimming file", filename, "-----"
 
 f = open('untrimmedDataFiles/'+filename+'.csv', 'rb')
