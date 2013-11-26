@@ -8,15 +8,16 @@ import os
 import matplotlib.pyplot as pyplot
 from sklearn.hmm import GaussianHMM
 
-def date2int(date_str):
+def dateconv(date_str):
     date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-    return date.toordinal()
+    print(date)
+    return date
 
 
-def tidmread(file_name):
+def t1dmread(file_name):
     dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm'),
-                        'formats' : [np.int, np.float, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int] })
-    data = np.loadtxt(file_name, delimiter=',', skiprows=0,converters = { 0 : date2int },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27), dtype=dtypes)
+                        'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int] })
+    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27), dtype=dtypes)
     return data
 
 def basichmm(datacol1,datacol2): #This may need more arguments if we discover correlation with multiple factors.
@@ -36,27 +37,36 @@ def basichmm(datacol1,datacol2): #This may need more arguments if we discover co
     return 
 
 
-
-
-
-def stuffPlot(timestamps,values):
+def stuffPlot(timestamps,func,title,ylabel):
     fig = pyplot.figure()
-    pyplot.title('Sensor Data')
-    pyplot.ylabel('Sensor Data')
-    pyplot.xlabel('Timestamp')
-    pyplot.plot(timestamps,values,marker='o')
+    pyplot.title(title)
+    pyplot.ylabel(ylabel)
+    pyplot.xlabel('Time')
+    pyplot.plot(timestamps,func,marker='o')
+
+    
     return fig
 
 #--------------------------------------------------
 
-data = tidmread('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/diabetesFilesNoHeaders/MYFILE101.no_gaps.csv')
+# If no plots folder exists, make a folder to store all of the plots
+if not os.path.exists('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots'):
+    os.mkdir('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots')
+
+pyplot.ion()
+
+
+data = t1dmread('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
 timestamps101 = data['timestamp']
 skinTemp101 = data['skin temp']
 airTemp101 = data['air temp']
 steps101 = data['steps']
+hr101 = data['hr']
+cgm101 = data['cgm']
+normskintemp101 = skinTemp101 - airTemp101
 
-if not os.path.exists('plots'):
-    os.mkdir('plots')
 
-fig = stuffPlot(timestamps101,skinTemp101)
-fig.savefig('plots/skintemp101')
+
+fig = stuffPlot(timestamps101,(skinTemp101-airTemp101),'Skin Temp - Near Temp, Subject 101','Skin Temp - Near Temp')
+
+fig.savefig('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots/skinneartemp101')
