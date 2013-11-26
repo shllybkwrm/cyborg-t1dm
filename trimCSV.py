@@ -11,10 +11,13 @@ import csv
 #with open('DataFile103.csv', 'rb') as csvfile:
 #    csvReader = csv.reader(csvfile, dialect='excel')
 
-f = open('DataFile103.csv', 'rb')
+filename = 'MYFILE101.no_gaps'
+print "----- Trimming file", filename, "-----"
+
+f = open('untrimmedDataFiles/'+filename+'.csv', 'rb')
 csvReader = csv.reader(f, dialect='excel')
 
-g = open('DataFile103_trimmed.csv', "wb")
+g = open('trimmedDataFiles/'+filename+'_trimmed.csv', 'wb')
 csvWriter = csv.writer(g, dialect='excel')
 
 #i = 0 
@@ -44,7 +47,7 @@ for k in range(1,len(csvData)):
         #print row
         #csvData.remove(row)
         #csvData.pop( csvData.index(row) )
-    elif (row[len(row) - 1] == '-1') or (row[len(row) - 1] == '0'):
+    elif (row[len(row) - 3] == '-1') or (row[len(row) - 1] == '0'):
         j += 1
         #print row
         #csvData.remove(row)
