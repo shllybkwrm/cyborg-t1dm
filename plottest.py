@@ -4,21 +4,23 @@
 
 import numpy as np
 from datetime import datetime
+import pylab as pl
 import os
 import matplotlib.pyplot as pyplot
-from sklearn.hmm import GaussianHMM
+#from sklearn.hmm import GaussianHMM
+#from sklearn.hmm import GaussianHMM
 
 def dateconv(date_str):
     date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
     print(date)
     return date
 
-
 def t1dmread(file_name):
     dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm'),
                         'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int] })
     data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27), dtype=dtypes)
     return data
+
 
 def basichmm(datacol1,datacol2): #This may need more arguments if we discover correlation with multiple factors.
     cols = np.column_stack([datacol1,datacol2])
@@ -53,20 +55,20 @@ def stuffPlot(timestamps,func,title,ylabel):
 if not os.path.exists('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots'):
     os.mkdir('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots')
 
-pyplot.ion()
 
 
 data = t1dmread('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
-timestamps101 = data['timestamp']
-skinTemp101 = data['skin temp']
-airTemp101 = data['air temp']
-steps101 = data['steps']
-hr101 = data['hr']
-cgm101 = data['cgm']
+timestamps101 = np.array(data['timestamp'])
+skinTemp101 = np.array(data['skin temp'])
+airTemp101 = np.array(data['air temp'])
+steps101 = np.array(data['steps'])
+hr101 = np.array(data['hr'])
+cgm101 = np.array(data['cgm'])
 normskintemp101 = skinTemp101 - airTemp101
 
 
+pyplot.ion()
 
-fig = stuffPlot(timestamps101,(skinTemp101-airTemp101),'Skin Temp - Near Temp, Subject 101','Skin Temp - Near Temp')
+fig = stuffPlot(timestamps101,(normskintemp101),'Skin Temp - Near Temp, Subject 101','Skin Temp - Near Temp')
 
 fig.savefig('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots/skinneartemp101')
