@@ -7,12 +7,12 @@ from datetime import datetime
 import pylab as pl
 import os
 import matplotlib.pyplot as pyplot
-#from sklearn.hmm import GaussianHMM
+from sklearn.hmm import GaussianHMM
 #from sklearn.hmm import GaussianHMM
 
 def dateconv(date_str):
     date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-    print(date)
+    #print(date)
     return date
 
 def t1dmread(file_name):
@@ -45,19 +45,20 @@ def stuffPlot(timestamps,func,title,ylabel):
     pyplot.ylabel(ylabel)
     pyplot.xlabel('Time')
     pyplot.plot(timestamps,func,marker='o')
-
+    pyplot.show()
     
     return fig
 
 #--------------------------------------------------
 
 # If no plots folder exists, make a folder to store all of the plots
-if not os.path.exists('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots'):
-    os.mkdir('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots')
+#if not os.path.exists('~/cyborg-t1dm/cyborg-t1dm/plots'):
+if not os.path.exists('plots'):
+    os.mkdir('plots')
 
 
 
-data = t1dmread('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
 timestamps101 = np.array(data['timestamp'])
 skinTemp101 = np.array(data['skin temp'])
 airTemp101 = np.array(data['air temp'])
@@ -71,4 +72,4 @@ pyplot.ion()
 
 fig = stuffPlot(timestamps101,(normskintemp101),'Skin Temp - Near Temp, Subject 101','Skin Temp - Near Temp')
 
-fig.savefig('/Users/lauraS/Dropbox/aaaaGATech/aaasem1/ai/miniproject2/src/cyborg-t1dm/plots/skinneartemp101')
+fig.savefig('plots/skinneartemp101')
