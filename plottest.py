@@ -2,12 +2,15 @@
 # Data read-in adapted from http://software-carpentry.org/blog/2012/05/an-exercise-with-matplotlib-and-numpy.html
 # GaussianHMM info from http://scikit-learn.org/stable/auto_examples/applications/plot_hmm_stock_analysis.html
 
+from __future__ import print_function
 import numpy as np
+import datetime
 from datetime import datetime
 import pylab as pl
 import os
 import matplotlib.pyplot as pyplot
 from sklearn.hmm import GaussianHMM
+#from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
 #from sklearn.hmm import GaussianHMM
 
 def dateconv(date_str):
@@ -26,14 +29,14 @@ def basichmm(datacol1,datacol2): #This may need more arguments if we discover co
     cols = np.column_stack([datacol1,datacol2])
     
     components = 7 # 7 components = 7 stages?
-    model = GaussianHMM(components, covariance_type="diag", n_iter=1000)
-    model.fit([cols])
-    hidden_states = model.predict(cols)
+    theModel = GaussianHMM(components,covariance_type="diag") #would also have n_iter=1000 as last argument, but that causes error
+    theModel.fit([cols])
+    hidden_states = theModel.predict(cols)
     print("Hidden States:")
     for i in range(components):
         print("Hidden state %d" % i)
-        print("mean = ", model.means_[i])
-        print("variance = %d", np.diag(model.covars_[i]))
+        print("mean = ", theModel.means_[i])
+        print("variance = %d", np.diag(theModel.covars_[i]))
         print()
         
     return 
@@ -67,9 +70,38 @@ hr101 = np.array(data['hr'])
 cgm101 = np.array(data['cgm'])
 normskintemp101 = skinTemp101 - airTemp101
 
+toFit = np.column_stack([timestamps101,normskintemp101])
+print("Fitting to HMM")
+numComp = 5 # Number of hidden states
 
-pyplot.ion()
+model = GaussianHMM(numComp,covariance_type="diag")
+model.fit([toFit])
 
-fig = stuffPlot(timestamps101,(normskintemp101),'Skin Temp - Near Temp, Subject 101','Skin Temp - Near Temp')
+hiddenStates = model.predict(toFit)
+
+print("done")
+
+print("Transition Matrix for Normed Skin Temperature")
+print(model.transmat_)
+print("\nMeans and variances of each hidden state: \n")
+
+for i in range(numComp):
+    print("%dth hidden state:" % i)
+    print("Mean = ",model.means_[i])
+    print("Variance = ",np.diag(model.covars_[i]))
+    print()
+
+fig = pl.figure()
+skinTemp = fig.add_subplot(111)
+
+for i in range(numComp):
+    idx = (hidden_states == i)
+    skinTemp.plot_date(timeStamps101[idx],normskintemp101[idx],'o',label="%dth Hidden State" % i)
+skinTemp.legend()
+pl.show()
+
+#pyplot.ion()
+
+#fig = stuffPlot(timestamps101,(normskintemp101),'Skin Temp - Near Temp, Subject 101','Skin Temp - Near Temp')
 
 fig.savefig('plots/skinneartemp101')
