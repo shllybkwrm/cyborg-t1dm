@@ -92,12 +92,18 @@ for i in range(n_components):
     print()
 
 fig = pl.figure()
-skinTemp = fig.add_subplot(111)
+skinTemp = fig.add_subplot(211)
 
 for i in range(n_components):
     idx = (hidden_states == i)
-    skinTemp.plot_date(timeStamps101[idx],normskintemp101[idx],'o',label="%dth Hidden State" % i)
+    skinTemp.plot_date(timeStamps101[idx],normskintemp101[idx],'o',label="Hidden State %d" % i)
 skinTemp.legend()
+
+cgmPart = fig.add_subplot(212)
+for i in range(n_components):
+    idx = (hidden_states == i)
+    cgmPart.plot_date(timeStamps101[idx],cgm101[idx],'o',label="Hidden State %d" % i)
+cgmPart.legend()
 pl.show()
 
 pyplot.ion()
