@@ -62,7 +62,7 @@ if not os.path.exists('plots'):
 
 
 data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
-timestamps101 = np.array(data['timestamp'])
+timeStamps101 = np.array(data['timestamp'])
 skinTemp101 = np.array(data['skin temp'])
 airTemp101 = np.array(data['air temp'])
 steps101 = np.array(data['steps'])
@@ -70,31 +70,31 @@ hr101 = np.array(data['hr'])
 cgm101 = np.array(data['cgm'])
 normskintemp101 = skinTemp101 - airTemp101
 
-toFit = np.column_stack([timestamps101,normskintemp101])
+toFit = np.column_stack([cgm101,normskintemp101])
 print("Fitting to HMM")
-numComp = 5 # Number of hidden states
-
-model = GaussianHMM(numComp,covariance_type="diag")
+#numComp = 5 # Number of hidden states
+n_components = 5
+model = GaussianHMM(n_components,cvtype='diag')
 model.fit([toFit])
 
-hiddenStates = model.predict(toFit)
+hidden_states = model.predict(toFit)
 
 print("done")
 
 print("Transition Matrix for Normed Skin Temperature")
-print(model.transmat_)
+print(model.transmat)
 print("\nMeans and variances of each hidden state: \n")
 
-for i in range(numComp):
+for i in range(n_components):
     print("%dth hidden state:" % i)
-    print("Mean = ",model.means_[i])
-    print("Variance = ",np.diag(model.covars_[i]))
+    print("Mean = ",model.means[i])
+    print("Variance = ",np.diag(model.covars[i]))
     print()
 
 fig = pl.figure()
 skinTemp = fig.add_subplot(111)
 
-for i in range(numComp):
+for i in range(n_components):
     idx = (hidden_states == i)
     skinTemp.plot_date(timeStamps101[idx],normskintemp101[idx],'o',label="%dth Hidden State" % i)
 skinTemp.legend()
