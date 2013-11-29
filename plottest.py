@@ -74,21 +74,21 @@ toFit = np.column_stack([cgm101,normskintemp101])
 print("Fitting to HMM")
 #numComp = 5 # Number of hidden states
 n_components = 5
-model = GaussianHMM(n_components,cvtype='diag')
+model = GaussianHMM(n_components,covariance_type='diag',n_iter=1000)
 model.fit([toFit])
 
 hidden_states = model.predict(toFit)
 
-print("done")
+print("done\n")
 
 print("Transition Matrix for Normed Skin Temperature")
-print(model.transmat)
+print(model.transmat_)
 print("\nMeans and variances of each hidden state: \n")
 
 for i in range(n_components):
     print("%dth hidden state:" % i)
-    print("Mean = ",model.means[i])
-    print("Variance = ",np.diag(model.covars[i]))
+    print("Mean = ",model.means_[i])
+    print("Variance = ",np.diag(model.covars_[i]))
     print()
 
 fig = pl.figure()
@@ -100,7 +100,7 @@ for i in range(n_components):
 skinTemp.legend()
 pl.show()
 
-#pyplot.ion()
+pyplot.ion()
 
 #fig = stuffPlot(timestamps101,(normskintemp101),'Skin Temp - Near Temp, Subject 101','Skin Temp - Near Temp')
 
