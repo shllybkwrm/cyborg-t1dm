@@ -25,23 +25,6 @@ def t1dmread(file_name):
     return data
 
 
-def basichmm(datacol1,datacol2): #This may need more arguments if we discover correlation with multiple factors.
-    cols = np.column_stack([datacol1,datacol2])
-    
-    components = 7 # 7 components = 7 stages?
-    theModel = GaussianHMM(components,covariance_type="diag") #would also have n_iter=1000 as last argument, but that causes error
-    theModel.fit([cols])
-    hidden_states = theModel.predict(cols)
-    print("Hidden States:")
-    for i in range(components):
-        print("Hidden state %d" % i)
-        print("mean = ", theModel.means_[i])
-        print("variance = %d", np.diag(theModel.covars_[i]))
-        print()
-        
-    return 
-
-
 def stuffPlot(timestamps,func,title,ylabel):
     fig = pyplot.figure()
     pyplot.title(title)
@@ -55,7 +38,6 @@ def stuffPlot(timestamps,func,title,ylabel):
 #--------------------------------------------------
 
 # If no plots folder exists, make a folder to store all of the plots
-#if not os.path.exists('~/cyborg-t1dm/cyborg-t1dm/plots'):
 if not os.path.exists('plots'):
     os.mkdir('plots')
 
