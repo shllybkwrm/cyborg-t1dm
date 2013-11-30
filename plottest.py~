@@ -70,7 +70,7 @@ hr101 = np.array(data['hr'])
 cgm101 = np.array(data['cgm'])
 normskintemp101 = skinTemp101 - airTemp101
 
-toFit = np.column_stack([cgm101,normskintemp101,hr101])
+toFit = np.column_stack([cgm101,normskintemp101,hr101,steps101])
 print("Fitting to HMM")
 n_components = 4
 model = GaussianHMM(n_components,covariance_type='diag',n_iter=1000)
@@ -91,20 +91,20 @@ for i in range(n_components):
     print()
 
 fig = pl.figure()
-skinTemp = fig.add_subplot(311)
-cgmFig = fig.add_subplot(312)
-hrFig = fig.add_subplot(313)
-#stepsFig = fig.add_subplot(414)
+skinTemp = fig.add_subplot(411)
+cgmPart = fig.add_subplot(412)
+hrFig = fig.add_subplot(413)
+stepsFig = fig.add_subplot(414)
 for i in range(n_components):
     idx = (hidden_states == i)
     skinTemp.plot_date(timeStamps101[idx],normskintemp101[idx],'o',label="Hidden State %d" % i)
     cgmFig.plot_date(timeStamps101[idx],cgm101[idx],'o',label="Hidden State %d" % i)
     hrFig.plot_date(timeStamps101[idx],hr101[idx],'o',label="Hidden State %d" % i)
-#    stepsFig.plot_date(timeStamps101[idx],steps101[idx],'o',label="Hidden State %d" % i)
-#cgmFig.legend()
-#skinTemp.legend()
-#hrFig.legend()
-#stepsFig.legend()
+    stepsFig.plot_date(timeStamps101[idx],steps101[idx],'o',label="Hidden State %d" % i)
+cgmFig.legend()
+skinTemp.legend()
+hrFig.legend()
+stepsFig.legend()
 
 pl.show()
 
