@@ -110,7 +110,7 @@ for i in ninterval:
 	for x in fname:	
 		print x," ",ninterval
 		sl=plotallcol()
-		arr,index=sl.reader("/home/strickland/cyborg-t1dm/viztool/MYFILE104.no_gaps.csv")
+		arr,index=sl.reader("/home/strickland/cyborg-t1dm/viztool/MYFILE104.csv")
 		interval=(i*2)+1
 		cols=[8]
 		for y in cols:

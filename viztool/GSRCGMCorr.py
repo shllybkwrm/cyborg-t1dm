@@ -19,7 +19,7 @@ from chaco.tools.api import PanTool, BroadcasterTool, ZoomTool
 from numpy import *
 from decimal import *
 from scipy.stats import *
-from read import plotallcol as plotData
+import plotallcol as plotData
 
 def main():
     # normally this function gets its values out of other files
