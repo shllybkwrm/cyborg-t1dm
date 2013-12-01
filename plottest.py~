@@ -52,7 +52,7 @@ hr101 = np.array(data['hr'])
 cgm101 = np.array(data['cgm'])
 normskintemp101 = skinTemp101 - airTemp101
 
-toFit = np.column_stack([cgm101,normskintemp101])
+toFit = np.column_stack([cgm101,normskintemp101,hr101])
 print("Fitting to HMM")
 n_components = 4
 model = GaussianHMM(n_components,covariance_type='diag',n_iter=1000)
