@@ -10,8 +10,6 @@ import pylab as pl
 import os
 import matplotlib.pyplot as pyplot
 from sklearn.hmm import GaussianHMM
-#from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
-#from sklearn.hmm import GaussianHMM
 
 def dateconv(date_str):
     date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
@@ -49,7 +47,6 @@ steps = np.array(data['steps'])
 hr = np.array(data['hr'])
 cgm = np.array(data['cgm'])
 numlabels = np.array(data['numlabel'])
-#labels = np.array(data['label'])
 normskintemp = skinTemp - airTemp
 
 lenData = len(timeStamps)
@@ -74,7 +71,6 @@ for i in range(n_components):
 
 hidden_states_test = model.predict(test)
 print("Test Set Hidden States")
-#print(hidden_states_test)
 
 test_results = np.empty_like(hidden_states_test,dtype="S10")
 state_contents = np.empty_like(hidden_states_test)
@@ -88,13 +84,6 @@ for idx,item in np.ndenumerate(hidden_states_test):
     else: 
         np.put(test_results,idx,'stable',mode='clip')
         np.put(state_contents,idx,item,mode='clip')
-#    print(item)
-#    print(test_results[idx])
-#    import pdb; pdb.set_trace()
-#print(test_timeStamps)
-#print(test_results)
-
-
 
 results = np.column_stack((test_timeStamps,state_contents,test_results))
 print(results)

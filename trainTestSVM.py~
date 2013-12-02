@@ -100,7 +100,7 @@ model = svm.SVC()
 import pdb; pdb.set_trace()
 model.fit(training,trainLabels)
 import pdb; pdb.set_trace()
-groups_training = model.predict(trainSamples[0:lenTrain])
+groups_training = model.predict(training)
 
 group_test = model.predict(test)
 print("Test Set Groups")

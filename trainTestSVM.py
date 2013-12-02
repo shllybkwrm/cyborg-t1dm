@@ -47,15 +47,10 @@ steps = np.array(data['steps'])
 hr = np.array(data['hr'])
 cgm = np.array(data['cgm'])
 numlabels = np.array(data['numlabel'])
-#labels = np.array(data['label'])
 normskintemp = skinTemp - airTemp
 
-#lenData = len(timeStamps)/60
 samples = len(timeStamps)/60
 lenTrain = np.ceil(0.8*samples)
-#trainSamples = np.empty((samples,2))
-#trainTestLabels = np.empty((samples,1),dtype=int)
-#timeStart = np.empty((samples,1),dtype=datetime)
 trainSamplesBegin = []
 trainSamplesEnd = []
 trainLabels = []
@@ -63,15 +58,6 @@ trainTestLabels = []
 timeStart = []
 testLabels = []
 
-
-# for each index and element in normskintemp
-# if index % 60 == 59
-# put that as second feature for the current row
-# if index % 60 == 0,
-# put that as first feature for the current row
-# 
-#import pdb; pdb.set_trace()
-#next = 0
 for index,item in np.ndenumerate(normskintemp):
     idxmod = np.mod(index,60)
     if idxmod == 59:
@@ -90,11 +76,7 @@ testLabels = trainTestLabels[(int(lenTrain)+1):samples]
 
 test_timeStamps = timeStart[int(lenTrain)+1:samples]
 
-############ What goes into Fit:
-# For fit() for an svm, you put in 3 array arguments:
-# an array X of size [n_samples, n_features] holding the training samples, and an array Y of integer values, size [n_samples], holding the class labels for the training samples
-
-# Idea: Get array that is same length of number of samples. In it, put timestamp at beginning of interval, first skintemp value in interval, last skintemp value in interval, slope calculated from those two, and HMM label (1, 0, -1). The slope becomes 
+# For training SVM: first skintemp value in interval, last skintemp value in interval, and label (1, 0, -1).
 
 model = svm.SVC()
 import pdb; pdb.set_trace()
@@ -117,13 +99,6 @@ for idx,item in np.ndenumerate(group_test):
     else: 
         np.put(test_results,idx,'stable',mode='clip')
         np.put(state_contents,idx,item,mode='clip')
-#    print(item)
-#    print(test_results[idx])
-import pdb; pdb.set_trace()
-#print(test_timeStamps)
-#print(test_results)
-
-
 
 results = np.column_stack((test_timeStamps,state_contents,test_results))
 print(results)
