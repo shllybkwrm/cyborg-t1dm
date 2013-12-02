@@ -34,7 +34,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 if not os.path.exists('plots'):
     os.mkdir('plots')
 
-data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE105.no_gaps_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -43,14 +43,13 @@ hr = np.array(data['hr'])
 cgm = np.array(data['cgm'])
 normskintemp = skinTemp - airTemp
 
-
 fig = pl.figure()
 cgmFig = fig.add_subplot(211)
-pl.plot(timeStamps,cgm,'o')
+pl.plot(timeStamps,cgm,'.')
 fig.autofmt_xdate()
 pl.ylabel('Blood Glucose from CGM')
 skinTemp = fig.add_subplot(212)
-pl.plot(timeStamps,normskintemp,'o')
+pl.plot(timeStamps,normskintemp,'.')
 fig.autofmt_xdate()
 pl.ylabel('Skin Temp - Ambient Temp')
 pl.xlabel('Time')
