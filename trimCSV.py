@@ -48,12 +48,14 @@ print len(csvData[0]), "columns in csv data"
 
 for k in range(1,len(csvData)):
     row = csvData[k][:-1]
+    #row = csvData[k]
     if 'inf' in row:
         i += 1
         #print row
         #csvData.remove(row)
         #csvData.pop( csvData.index(row) )
     elif (row[-2] == '-1') or (row[-2] == '0'):
+    #elif (row[-1] == '-1') or (row[-1] == '0'):
         j += 1
         #print row
         #csvData.remove(row)
@@ -95,11 +97,11 @@ for i in range(0,intervals):
     #print "Interval delta is", sum(delta), "with an average of", avg
     #print "Interval delta is", delta
     if delta<10 and delta>-10:
-        cgmDir.append('stable')
+        cgmDir.append(0)
     elif delta<0:
-        cgmDir.append('falling')
+        cgmDir.append(-1)
     else:
-        cgmDir.append('rising')        
+        cgmDir.append(1)        
 print cgmDir
 
 for i in range(1, len(csvData_trimmed)):
