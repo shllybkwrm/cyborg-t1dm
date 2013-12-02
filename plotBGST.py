@@ -13,9 +13,9 @@ def dateconv(date_str):
     return date
 
 def t1dmread(file_name):
-    dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm'),
-                        'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int] })
-    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27), dtype=dtypes)
+    dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm', 'cgm dir'),
+                        'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int, np.int] })
+    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
     return data
 
 def stuffPlot(timestamps,func,title,ylabel):
@@ -41,18 +41,41 @@ airTemp = np.array(data['air temp'])
 steps = np.array(data['steps'])
 hr = np.array(data['hr'])
 cgm = np.array(data['cgm'])
+cgmDir = np.array(data['cgm dir'])
 normskintemp = skinTemp - airTemp
 
 
 fig = pl.figure()
+#pl.title('CGM Reading and Normalized Skin Temperature for the same subject')
 cgmFig = fig.add_subplot(211)
-pl.plot(timeStamps,cgm,'.')
-fig.autofmt_xdate()
-pl.ylabel('Blood Glucose from CGM')
+pl.ylabel('CGM Blood Glucose')
 skinTemp = fig.add_subplot(212)
-pl.plot(timeStamps,normskintemp,'.')
+pl.ylabel('Normalized Skin Temp')
+for i in range(0,len(cgm)):
+    if cgmDir[i]==0:
+        cgmFig.plot(timeStamps[i],cgm[i],'go')
+    elif cgmDir[i]==1:
+        cgmFig.plot(timeStamps[i],cgm[i],'ro')
+    elif cgmDir[i]==-1:
+        cgmFig.plot(timeStamps[i],cgm[i],'bo')
+#cgmFig.plot(timeStamps,cgm,'o')
 fig.autofmt_xdate()
-pl.ylabel('Skin Temp - Ambient Temp')
+
+skinTemp = fig.add_subplot(212)
+pl.ylabel('Normalized Skin Temp')
+'''
+for i in range(0,len(cgm)):
+    if cgmDir[i]==0:
+        skinTemp.plot(timeStamps[i],normskintemp[i],'go')
+    elif cgmDir[i]==1:
+        skinTemp.plot(timeStamps[i],normskintemp[i],'ro')
+    elif cgmDir[i]==-1:
+        skinTemp.plot(timeStamps[i],normskintemp[i],'bo')
+'''
+skinTemp.plot(timeStamps,normskintemp,'o')
+fig.autofmt_xdate()
 pl.xlabel('Time')
+
 pl.show()
 fig.savefig('plots/bgstsubplot')
+
