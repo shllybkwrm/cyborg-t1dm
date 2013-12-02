@@ -22,17 +22,6 @@ def t1dmread(file_name):
     data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
     return data
 
-
-def stuffPlot(timestamps,func,title,ylabel):
-    fig = pyplot.figure()
-    pyplot.title(title)
-    pyplot.ylabel(ylabel)
-    pyplot.xlabel('Time')
-    pyplot.plot(timestamps,func,marker='o')
-    pyplot.show()
-    
-    return fig
-
 #--------------------------------------------------
 
 # If no plots folder exists, make a folder to store all of the plots
@@ -86,5 +75,26 @@ for idx,item in np.ndenumerate(hidden_states_test):
         np.put(state_contents,idx,item,mode='clip')
 
 results = np.column_stack((test_timeStamps,state_contents,test_results))
+print("Results:\n")
 print(results)
 
+# If no plots folder exists, make a folder to store all of the plots
+if not os.path.exists('plots'):
+    os.mkdir('plots')
+
+fig = pl.figure()
+skinTemp = fig.add_subplot(211)
+pl.ylabel('Norm of Skin Temp')
+cgmFig = fig.add_subplot(212)
+pl.ylabel('CGM BG Estimate')
+pl.xlabel('Time')
+fig.autofmt_xdate()
+for i in range(n_components):
+    idx = (hidden_states_test == i)
+    skinTemp.plot_date(timeStamps[idx],normskintemp[idx],'.',label="Hidden State %d" % i)
+    cgmFig.plot_date(timeStamps[idx],cgm[idx],'.',label="Hidden State %d" % i)
+skinTemp.legend()
+
+pl.show()
+
+fig.savefig('plots/hmmskincgm101')
