@@ -46,11 +46,11 @@ normskintemp = skinTemp - airTemp
 
 fig = pl.figure()
 cgmFig = fig.add_subplot(211)
-pl.plot(timeStamps,cgm,'o')
+pl.plot(timeStamps,cgm,'.')
 fig.autofmt_xdate()
 pl.ylabel('Blood Glucose from CGM')
 skinTemp = fig.add_subplot(212)
-pl.plot(timeStamps,normskintemp,'o')
+pl.plot(timeStamps,normskintemp,'.')
 fig.autofmt_xdate()
 pl.ylabel('Skin Temp - Ambient Temp')
 pl.xlabel('Time')
