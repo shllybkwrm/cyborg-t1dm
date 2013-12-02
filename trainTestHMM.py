@@ -21,7 +21,7 @@ def dateconv(date_str):
 def t1dmread(file_name):
     dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm', 'numlabel'),
                         'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int, np.int]})
-    data = np.loadtxt(file_name, delimiter=';', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
+    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
     return data
 
 
@@ -41,7 +41,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 if not os.path.exists('plots'):
     os.mkdir('plots')
 
-data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_MINIMAL_labeled.csv')
+data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -52,12 +52,14 @@ numlabels = np.array(data['numlabel'])
 #labels = np.array(data['label'])
 normskintemp = skinTemp - airTemp
 
-training = np.column_stack([normskintemp[0:299],numlabels[0:299]])
-test = np.column_stack([normskintemp[300:360],numlabels[300:360]])
+lenData = len(timeStamps)
+lenTrain = np.ceil(0.8*lenData)
 
-#fit1 = np.column_stack([normskintemp,numlabels])
+training = np.column_stack([normskintemp[0:lenTrain],numlabels[0:lenTrain]])
+test = np.column_stack([normskintemp[(lenTrain+1):lenData],numlabels[(lenTrain+1):lenData]])
+test_timeStamps = timeStamps[lenTrain+1:lenData]
 
-n_components = 3
+n_components = 3    # Rising, falling, and stable blood sugar
 model = GaussianHMM(n_components,covariance_type='diag',n_iter=1000)
 model.fit([training])
 hidden_states_training = model.predict(training)
@@ -65,11 +67,27 @@ hidden_states_training = model.predict(training)
 print("Transition Matrix:\n")
 print(model.transmat_)
 for i in range(n_components):
-    print("%dth hidden state:" % i)
+    print("Hidden state %d:" % i)
     print("Mean = ",model.means_[i])
     print("Variance = ",np.diag(model.covars_[i]))
     print()
 
 hidden_states_test = model.predict(test)
 print("Test Set Hidden States")
-print(hidden_states_test)                         # Please note that hidden state 2 may not correspond to label 2! 
+print(hidden_states_test)
+
+test_results = np.empty_like(hidden_states_test,dtype="S10")
+
+for idx,item in np.ndenumerate(hidden_states_test):
+    if item == -1:
+        np.put(test_results,idx,'falling',mode='clip')
+    elif item == 1:
+        np.put(test_results,idx,'rising',mode='clip')
+    else: 
+        np.put(test_results,idx,'stable',mode='clip')
+#    print(item)
+#    print(test_results[idx])
+#    import pdb; pdb.set_trace()
+print(test_timeStamps)
+print(test_results)
+
