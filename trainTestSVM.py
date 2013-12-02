@@ -9,9 +9,7 @@ from datetime import datetime
 import pylab as pl
 import os
 import matplotlib.pyplot as pyplot
-from sklearn.hmm import GaussianHMM
-#from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
-#from sklearn.hmm import GaussianHMM
+from sklearn import svm
 
 def dateconv(date_str):
     date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
@@ -52,33 +50,51 @@ numlabels = np.array(data['numlabel'])
 #labels = np.array(data['label'])
 normskintemp = skinTemp - airTemp
 
-lenData = len(timeStamps)
-lenTrain = np.ceil(0.8*lenData)
+#lenData = len(timeStamps)/60
+samples = len(timeStamps)/60
+lenTrain = np.ceil(0.8*samples)
+trainSamples = np.empty((samples,2))
+trainLabels = np.empty((samples,1))
+timeStart = np.empty((samples,1),dtype=datetime)
 
-training = np.column_stack([normskintemp[0:lenTrain],numlabels[0:lenTrain]])
-test = np.column_stack([normskintemp[(lenTrain+1):lenData],numlabels[(lenTrain+1):lenData]])
-test_timeStamps = timeStamps[lenTrain+1:lenData]
+# for each index and element in normskintemp
+# if index % 60 == 59
+# put that as second feature for the current row
+# if index % 60 == 0,
+# put that as first feature for the current row
+# 
+next = 0
+for index,item in np.ndenumerate(normskintemp):
+#    import pdb; pdb.set_trace()
+    idxmod = np.mod(index,60)
+    if idxmod == 59:
+        np.put(trainSamples,(next,2),item,mode='clip')
+    elif idxmod == 0:
+        np.put(trainSamples,(next,1),item,mode='clip')
+        np.put(trainLabels,next,numlabels[index],mode='clip')
+        np.put(timeStart,next,timeStamps[index],mode='clip')
+
+training = np.column_stack([trainSamples[0:lenTrain],trainLabels[0:lenTrain]])
+test = np.column_stack([trainSamples[(lenTrain+1):samples],trainLabels[(lenTrain+1):samples]])
+test_timeStamps = timeStart[lenTrain+1:samples]
+
+############ What goes into Fit:
+# For fit() for an svm, you put in 3 array arguments:
+# an array X of size [n_samples, n_features] holding the training samples, and an array Y of integer values, size [n_samples], holding the class labels for the training samples
+
+# Idea: Get array that is same length of number of samples. In it, put timestamp at beginning of interval, first skintemp value in interval, last skintemp value in interval, slope calculated from those two, and HMM label (1, 0, -1). The slope becomes 
 
 n_components = 3    # Rising, falling, and stable blood sugar
-model = GaussianHMM(n_components,covariance_type='diag',n_iter=1000)
-model.fit([training])
-hidden_states_training = model.predict(training)
+model = svm.SVC()
+model.fit(trainSamples[0:lenTrain],trainLabels[0:lenTrain])
+groups_training = model.predict(trainSamples[0:lenTrain])
 
-print("Transition Matrix:\n")
-print(model.transmat_)
-for i in range(n_components):
-    print("Hidden state %d:" % i)
-    print("Mean = ",model.means_[i])
-    print("Variance = ",np.diag(model.covars_[i]))
-    print()
+group_test = model.predict(trainSamples[(lenTrain+1):samples])
+print("Test Set Groups")
 
-hidden_states_test = model.predict(test)
-print("Test Set Hidden States")
-#print(hidden_states_test)
-
-test_results = np.empty_like(hidden_states_test,dtype="S10")
-state_contents = np.empty_like(hidden_states_test)
-for idx,item in np.ndenumerate(hidden_states_test):
+test_results = np.empty_like(group_test,dtype="S10")
+state_contents = np.empty_like(group_test)
+for idx,item in np.ndenumerate(group_test):
     if item == -1:
         np.put(test_results,idx,'falling',mode='clip')
         np.put(state_contents,idx,item,mode='clip')
