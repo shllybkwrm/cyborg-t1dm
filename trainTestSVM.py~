@@ -53,9 +53,16 @@ normskintemp = skinTemp - airTemp
 #lenData = len(timeStamps)/60
 samples = len(timeStamps)/60
 lenTrain = np.ceil(0.8*samples)
-trainSamples = np.empty((samples,2))
-trainLabels = np.empty((samples,1))
-timeStart = np.empty((samples,1),dtype=datetime)
+#trainSamples = np.empty((samples,2))
+#trainTestLabels = np.empty((samples,1),dtype=int)
+#timeStart = np.empty((samples,1),dtype=datetime)
+trainSamplesBegin = []
+trainSamplesEnd = []
+trainLabels = []
+trainTestLabels = []
+timeStart = []
+testLabels = []
+
 
 # for each index and element in normskintemp
 # if index % 60 == 59
@@ -63,20 +70,25 @@ timeStart = np.empty((samples,1),dtype=datetime)
 # if index % 60 == 0,
 # put that as first feature for the current row
 # 
-next = 0
+#import pdb; pdb.set_trace()
+#next = 0
 for index,item in np.ndenumerate(normskintemp):
-#    import pdb; pdb.set_trace()
     idxmod = np.mod(index,60)
     if idxmod == 59:
-        np.put(trainSamples,(next,2),item,mode='clip')
+        print(item)
+        trainSamplesEnd.append(item)
     elif idxmod == 0:
-        np.put(trainSamples,(next,1),item,mode='clip')
-        np.put(trainLabels,next,numlabels[index],mode='clip')
-        np.put(timeStart,next,timeStamps[index],mode='clip')
+        print(item)
+        trainSamplesBegin.append(item)
+        trainTestLabels.append(numlabels[index])
+        timeStart.append(timeStamps[index])
 
-training = np.column_stack([trainSamples[0:lenTrain],trainLabels[0:lenTrain]])
-test = np.column_stack([trainSamples[(lenTrain+1):samples],trainLabels[(lenTrain+1):samples]])
-test_timeStamps = timeStart[lenTrain+1:samples]
+training = np.column_stack([trainSamplesBegin[0:int(lenTrain)],trainSamplesEnd[0:int(lenTrain)]])
+trainLabels = trainTestLabels[0:int(lenTrain)]
+test = np.column_stack([trainSamplesBegin[(int(lenTrain)+1):samples],trainSamplesEnd[(int(lenTrain)+1):samples]])
+testLabels = trainTestLabels[(int(lenTrain)+1):samples]
+
+test_timeStamps = timeStart[int(lenTrain)+1:samples]
 
 ############ What goes into Fit:
 # For fit() for an svm, you put in 3 array arguments:
@@ -84,16 +96,17 @@ test_timeStamps = timeStart[lenTrain+1:samples]
 
 # Idea: Get array that is same length of number of samples. In it, put timestamp at beginning of interval, first skintemp value in interval, last skintemp value in interval, slope calculated from those two, and HMM label (1, 0, -1). The slope becomes 
 
-n_components = 3    # Rising, falling, and stable blood sugar
 model = svm.SVC()
-model.fit(trainSamples[0:lenTrain],trainLabels[0:lenTrain])
+import pdb; pdb.set_trace()
+model.fit(training,trainLabels)
+import pdb; pdb.set_trace()
 groups_training = model.predict(trainSamples[0:lenTrain])
 
-group_test = model.predict(trainSamples[(lenTrain+1):samples])
+group_test = model.predict(test)
 print("Test Set Groups")
 
 test_results = np.empty_like(group_test,dtype="S10")
-state_contents = np.empty_like(group_test)
+state_contents = np.empty_like(group_test,dtype=np.int)
 for idx,item in np.ndenumerate(group_test):
     if item == -1:
         np.put(test_results,idx,'falling',mode='clip')
@@ -106,7 +119,7 @@ for idx,item in np.ndenumerate(group_test):
         np.put(state_contents,idx,item,mode='clip')
 #    print(item)
 #    print(test_results[idx])
-#    import pdb; pdb.set_trace()
+import pdb; pdb.set_trace()
 #print(test_timeStamps)
 #print(test_results)
 
