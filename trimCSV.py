@@ -96,7 +96,7 @@ for i in range(0,intervals):
     delta = sum(diff)
     #print "Interval delta is", sum(delta), "with an average of", avg
     #print "Interval delta is", delta
-    if delta<10 and delta>-10:
+    if delta<=10 and delta>=-10:
         cgmDir.append(0)
     elif delta<0:
         cgmDir.append(-1)
