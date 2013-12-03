@@ -34,7 +34,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 if not os.path.exists('plots'):
     os.mkdir('plots')
 
-data = t1dmread('trimmedDataFiles/MYFILE105.no_gaps_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -44,6 +44,7 @@ cgm = np.array(data['cgm'])
 cgmDir = np.array(data['cgm dir'])
 normskintemp = skinTemp - airTemp
 
+
 fig = pl.figure()
 #pl.title('CGM Reading and Normalized Skin Temperature for the same subject')
 cgmFig = fig.add_subplot(211)
@@ -52,11 +53,11 @@ skinTemp = fig.add_subplot(212)
 pl.ylabel('Normalized Skin Temp')
 for i in range(0,len(cgm)):
     if cgmDir[i]==0:
-        cgmFig.plot(timeStamps[i],cgm[i],'go')
+        cgmFig.plot(timeStamps[i],cgm[i],'g.')
     elif cgmDir[i]==1:
-        cgmFig.plot(timeStamps[i],cgm[i],'ro')
+        cgmFig.plot(timeStamps[i],cgm[i],'r.')
     elif cgmDir[i]==-1:
-        cgmFig.plot(timeStamps[i],cgm[i],'bo')
+        cgmFig.plot(timeStamps[i],cgm[i],'b.')
 #cgmFig.plot(timeStamps,cgm,'o')
 fig.autofmt_xdate()
 
@@ -71,7 +72,7 @@ for i in range(0,len(cgm)):
     elif cgmDir[i]==-1:
         skinTemp.plot(timeStamps[i],normskintemp[i],'bo')
 '''
-skinTemp.plot(timeStamps,normskintemp,'o')
+skinTemp.plot(timeStamps,normskintemp,'m.')
 fig.autofmt_xdate()
 pl.xlabel('Time')
 

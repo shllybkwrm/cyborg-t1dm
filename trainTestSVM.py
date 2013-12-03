@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 # Data read-in adapted from http://software-carpentry.org/blog/2012/05/an-exercise-with-matplotlib-and-numpy.html
-# GaussianHMM info from http://scikit-learn.org/stable/auto_examples/applications/plot_hmm_stock_analysis.html
 
 from __future__ import print_function
 import numpy as np
@@ -105,16 +104,37 @@ if not os.path.exists('plots'):
 
 fig = pl.figure()
 skinTemp = fig.add_subplot(211)
-pl.ylabel('Norm of Skin Temp')
+pl.ylabel('Norm Skin Temp')
 cgmFig = fig.add_subplot(212)
-pl.ylabel('CGM BG Estimate')
-pl.xlabel('Time')
-fig.autofmt_xdate()
+pl.ylabel('Estimated CGM BG')
+'''
 for i in range(3):
     idx = (group_test == i)
     skinTemp.plot_date(timeStamps[idx],normskintemp[idx],'.',label="Class %d" % i)
     cgmFig.plot_date(timeStamps[idx],cgm[idx],'.',label="Class %d" % i)
-skinTemp.legend()
+'''
+for i in range(0,len(group_test)):
+    start = i*60
+    stop = (i+1)*60
+    if group_test[i]==0:
+        color = 'g.'
+        Label = 'Stable'
+    elif group_test[i]==1:
+        color = 'r.'
+        Label = 'Rising'
+    elif group_test[i]==-1:
+        color = 'b.'
+        Label = 'Falling'
+    skinTemp.plot_date(timeStamps[start:stop],normskintemp[start:stop],color,label=Label)
+    cgmFig.plot_date(timeStamps[start:stop],cgm[start:stop],color,label=Label)
+pl.xlabel('Time')
+fig.autofmt_xdate()
+
+#handles, labels = skinTemp.get_legend_handles_labels()
+r = pl.Rectangle((0, 0), 1, 1, fc="r")
+g = pl.Rectangle((0, 0), 1, 1, fc="g")
+b = pl.Rectangle((0, 0), 1, 1, fc="b")
+cgmFig.legend( [g,r,b], ['Stable','Rising','Falling'] )
 
 pl.show()
 
