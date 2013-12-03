@@ -12,12 +12,12 @@ import csv, sys
 #with open('DataFile103.csv', 'rb') as csvfile:
 #    csvReader = csv.reader(csvfile, dialect='excel')
 
-assert len(sys.argv) == 2, 'Please provide a filename, e.g. MYFILE101.no_gaps.'
+assert len(sys.argv) == 2, "Please provide a filename, e.g. 'trimCSV.py MYFILE101'."
 filename = str(sys.argv[1])
 #filename = 'MYFILE101.no_gaps'
 print "----- Trimming file", filename, "-----"
 
-f = open('untrimmedDataFiles/'+filename+'.csv', 'rb')
+f = open('untrimmedDataFiles/'+filename+'.no_gaps.csv', 'rb')
 csvReader = csv.reader(f, dialect='excel')
 
 g = open('trimmedDataFiles/'+filename+'_trimmed.csv', 'wb')
@@ -99,10 +99,10 @@ for i in range(0,intervals):
     if delta<=10 and delta>=-10:
         cgmDir.append(0)
     elif delta<0:
-        cgmDir.append(-1)
+        cgmDir.append(2)
     else:
         cgmDir.append(1)        
-print cgmDir
+#print cgmDir
 
 for i in range(1, len(csvData_trimmed)):
     row = csvData_trimmed[i]
