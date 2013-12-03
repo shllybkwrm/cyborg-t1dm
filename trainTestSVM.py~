@@ -66,6 +66,8 @@ for index,item in np.ndenumerate(normskintemp):
 training = np.column_stack([trainSamplesBegin[0:int(lenTrain)],trainSamplesEnd[0:int(lenTrain)]])
 trainLabels = trainTestLabels[0:int(lenTrain)]
 test = np.column_stack([trainSamplesBegin[(int(lenTrain)+1):samples],trainSamplesEnd[(int(lenTrain)+1):samples]])
+
+# Labels for test set data
 testLabels = trainTestLabels[(int(lenTrain)+1):samples]
 test_timeStamps = timeStart[int(lenTrain)+1:samples]
 
@@ -137,9 +139,9 @@ pl.xlabel('Time')
 fig.autofmt_xdate()
 
 #handles, labels = skinTemp.get_legend_handles_labels()
-r = pl.Rectangle((0, 0), 1, 1, fc="c")
-g = pl.Rectangle((0, 0), 1, 1, fc="m")
-b = pl.Rectangle((0, 0), 1, 1, fc="k")
+c = pl.Rectangle((0, 0), 1, 1, fc="c")
+m = pl.Rectangle((0, 0), 1, 1, fc="m")
+k = pl.Rectangle((0, 0), 1, 1, fc="k")
 cgmFig.legend( [c,m,k], ['Group 0','Group 1','Group 2'] )
 
 pl.show()

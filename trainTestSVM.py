@@ -66,6 +66,8 @@ for index,item in np.ndenumerate(normskintemp):
 training = np.column_stack([trainSamplesBegin[0:int(lenTrain)],trainSamplesEnd[0:int(lenTrain)]])
 trainLabels = trainTestLabels[0:int(lenTrain)]
 test = np.column_stack([trainSamplesBegin[(int(lenTrain)+1):samples],trainSamplesEnd[(int(lenTrain)+1):samples]])
+
+# "Official" labels for test set data
 testLabels = trainTestLabels[(int(lenTrain)+1):samples]
 test_timeStamps = timeStart[int(lenTrain)+1:samples]
 

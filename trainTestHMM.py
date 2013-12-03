@@ -41,10 +41,17 @@ training = np.column_stack([normskintemp[0:lenTrain],numlabels[0:lenTrain]])
 test = np.column_stack([normskintemp[(lenTrain+1):lenData],numlabels[(lenTrain+1):lenData]])
 test_timeStamps = timeStamps[lenTrain+1:lenData]
 
+test_st = normskintemp[int(lenTrain)+1:lenData]
+test_cgm = cgm[int(lenTrain)+1:lenData]
+# "Official" labels for test set data
+test_labels = numlabels[int(lenTrain)+1:lenData]
+
 n_components = 3    # Rising, falling, and stable blood sugar
 model = GaussianHMM(n_components,covariance_type='diag',n_iter=1000)
 model.fit([training])
 hidden_states_training = model.predict(training)
+
+
 
 print("Transition Matrix:\n")
 print(model.transmat_)
@@ -78,8 +85,7 @@ print(results)
 if not os.path.exists('plotshmm'):
     os.mkdir('plotshmm')
 
-test_st = normskintemp[int(lenTrain)+1:lenData]
-test_cgm = cgm[int(lenTrain)+1:lenData]
+
 '''
 fig = pl.figure()
 skinTemp = fig.add_subplot(211)
