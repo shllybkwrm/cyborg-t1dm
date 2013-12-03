@@ -93,7 +93,13 @@ for i in range(n_components):
     idx = (hidden_states_test == i)
     skinTemp.plot_date(timeStamps[idx],normskintemp[idx],'.',label="Hidden State %d" % i)
     cgmFig.plot_date(timeStamps[idx],cgm[idx],'.',label="Hidden State %d" % i)
-skinTemp.legend()
+cgmFig.legend()
+'''
+r = pl.Rectangle((0, 0), 1, 1, fc="r")
+g = pl.Rectangle((0, 0), 1, 1, fc="g")
+b = pl.Rectangle((0, 0), 1, 1, fc="b")
+cgmFig.legend( [g,r,b], ['Stable','Rising','Falling'] )
+'''
 
 pl.show()
 
