@@ -124,13 +124,13 @@ for i in range(0,len(group_test)):
     stop = (i+1)*60
     if group_test[i]==0:
         color = 'g.'
-        Label = 'Stable'
+        Label = 'Group 0'
     elif group_test[i]==1:
         color = 'r.'
-        Label = 'Rising'
+        Label = 'Group 1'
     elif group_test[i]==2:
         color = 'b.'
-        Label = 'Falling'
+        Label = 'Group 2'
     skinTemp.plot_date(longTestTime[start:stop],longTestSt[start:stop],color,label=Label)
     cgmFig.plot_date(longTestTime[start:stop],longTestCGM[start:stop],color,label=Label)
 pl.xlabel('Time')
@@ -140,7 +140,7 @@ fig.autofmt_xdate()
 r = pl.Rectangle((0, 0), 1, 1, fc="r")
 g = pl.Rectangle((0, 0), 1, 1, fc="g")
 b = pl.Rectangle((0, 0), 1, 1, fc="b")
-cgmFig.legend( [g,r,b], ['Stable','Rising','Falling'] )
+cgmFig.legend( [g,r,b], ['Group 0','Group 1','Group 2'] )
 
 pl.show()
 
