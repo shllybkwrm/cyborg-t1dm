@@ -24,7 +24,7 @@ def t1dmread(file_name):
 
 #--------------------------------------------------
 
-data = t1dmread('trimmedDataFiles/MYFILE117_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE101_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -141,4 +141,8 @@ cgmFig.legend( [g,r,b], ['Hidden State 0','Hidden State 1','Hidden State 2'] )
 
 pl.show()
 
-fig.savefig('plotshmm/hmmskincgm117')
+fig.savefig('plotshmm/hmmskincgm101')
+
+
+testDataOut = np.column_stack( [ test_cgm, test_labels, state_contents ] )
+np.savetxt("resultComparison/skincgm-hmm101.csv", testDataOut, '%d', delimiter=",")
