@@ -24,10 +24,6 @@ def t1dmread(file_name):
 
 #--------------------------------------------------
 
-# If no plots folder exists, make a folder to store all of the plots
-if not os.path.exists('plots'):
-    os.mkdir('plots')
-
 data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
@@ -75,26 +71,53 @@ for idx,item in np.ndenumerate(hidden_states_test):
         np.put(state_contents,idx,item,mode='clip')
 
 results = np.column_stack((test_timeStamps,state_contents,test_results))
+print("Results:\n")
 print(results)
 
-
 # If no plots folder exists, make a folder to store all of the plots
-if not os.path.exists('plots'):
-    os.mkdir('plots')
+if not os.path.exists('plotshmm'):
+    os.mkdir('plotshmm')
+
+test_st = normskintemp[int(lenTrain)+1:lenData]
+test_cgm = cgm[int(lenTrain)+1:lenData]
 
 fig = pl.figure()
 skinTemp = fig.add_subplot(211)
-pl.ylabel('Norm of Skin Temp')
+pl.ylabel('Skin Temp - Ambient Temp')
 cgmFig = fig.add_subplot(212)
-pl.ylabel('CGM BG Estimate')
+pl.ylabel('CGM BG')
 pl.xlabel('Time')
 fig.autofmt_xdate()
 for i in range(n_components):
     idx = (hidden_states_test == i)
-    skinTemp.plot_date(timeStamps[idx],normskintemp[idx],'.',label="Hidden State %d" % i)
-    cgmFig.plot_date(timeStamps[idx],cgm[idx],'.',label="Hidden State %d" % i)
+    skinTemp.plot_date(test_timeStamps[idx],test_st[idx],'.',label="Hidden State %d" % i)
+    cgmFig.plot_date(test_timeStamps[idx],test_cgm[idx],'.',label="Hidden State %d" % i)
 skinTemp.legend()
+'''
+fig = pl.figure()
+skinTemp = fig.add_subplot(211)
+pl.ylabel('Norm Skin Temp')
+cgmFig = fig.add_subplot(212)
+pl.ylabel('CGM BG')
 
+for i in range(0,len(hidden_states_test)):
+    start = i*60
+    stop = (i+1)*60
+    if hidden_states_test[i]==0:
+        color = 'g.'
+        Label = 'Stable'
+    elif hidden_states_test[i]==1:
+        color = 'r.'
+        Label = 'Rising'
+    elif hidden_states_test[i]==-1:
+        color = 'b.'
+        Label = 'Falling'
+#    import pdb; pdb.set_trace()
+    skinTemp.plot_date(test_timeStamps[start:stop],normskintemp[start:stop],color,label=Label)
+    cgmFig.plot_date(test_timeStamps[start:stop],cgm[start:stop],color,label=Label)
+pl.xlabel('Time')
+fig.autofmt_xdate()
+'''
 pl.show()
 
-fig.savefig('plots/hmmskincgm101')
+fig.savefig('plotshmm/hmmskincgm101')

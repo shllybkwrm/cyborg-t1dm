@@ -33,10 +33,6 @@ def stuffPlot(timestamps,func,title,ylabel):
 
 #--------------------------------------------------
 
-# If no plots folder exists, make a folder to store all of the plots
-if not os.path.exists('plots'):
-    os.mkdir('plots')
-
 data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
@@ -72,11 +68,12 @@ testLabels = trainTestLabels[(int(lenTrain)+1):samples]
 
 test_timeStamps = timeStart[int(lenTrain)+1:samples]
 
+
 # For training SVM: first skintemp value in interval, last skintemp value in interval, and label (1, 0, -1).
 
 model = svm.SVC()
 model.fit(training,trainLabels)
-groups_training = model.predict(training)
+group_training = model.predict(training)
 
 group_test = model.predict(test)
 print("Test Set Groups")
@@ -99,20 +96,24 @@ print("Results:\n")
 print(results)
 
 # If no plots folder exists, make a folder to store all of the plots
-if not os.path.exists('plots'):
-    os.mkdir('plots')
+if not os.path.exists('plotssvm'):
+    os.mkdir('plotssvm')
 
 fig = pl.figure()
 skinTemp = fig.add_subplot(211)
-pl.ylabel('Norm Skin Temp')
+pl.ylabel('Skin Temp - Ambient Temp')
 cgmFig = fig.add_subplot(212)
-pl.ylabel('Estimated CGM BG')
+pl.ylabel('CGM BG')
 '''
 for i in range(3):
     idx = (group_test == i)
     skinTemp.plot_date(timeStamps[idx],normskintemp[idx],'.',label="Class %d" % i)
     cgmFig.plot_date(timeStamps[idx],cgm[idx],'.',label="Class %d" % i)
 '''
+
+#test_st = normskintemp[int(lenTrain)+1:samples]
+#test_cgm = cgm[int(lenTrain)+1:samples]
+
 for i in range(0,len(group_test)):
     start = i*60
     stop = (i+1)*60
@@ -138,4 +139,4 @@ cgmFig.legend( [g,r,b], ['Stable','Rising','Falling'] )
 
 pl.show()
 
-fig.savefig('plots/svmskincgm101')
+fig.savefig('plotssvm/svmskincgm101')
