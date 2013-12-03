@@ -137,9 +137,9 @@ pl.xlabel('Time')
 fig.autofmt_xdate()
 
 #handles, labels = skinTemp.get_legend_handles_labels()
-r = pl.Rectangle((0, 0), 1, 1, fc="r")
-g = pl.Rectangle((0, 0), 1, 1, fc="g")
-b = pl.Rectangle((0, 0), 1, 1, fc="b")
+r = pl.Rectangle((0, 0), 1, 1, fc="c")
+g = pl.Rectangle((0, 0), 1, 1, fc="m")
+b = pl.Rectangle((0, 0), 1, 1, fc="k")
 cgmFig.legend( [g,r,b], ['Group 0','Group 1','Group 2'] )
 
 pl.show()
