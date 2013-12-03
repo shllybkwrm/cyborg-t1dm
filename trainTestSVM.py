@@ -33,7 +33,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 
 #--------------------------------------------------
 
-data = t1dmread('trimmedDataFiles/MYFILE101_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE117_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -146,4 +146,4 @@ cgmFig.legend( [c,m,k], ['Group 0','Group 1','Group 2'] )
 
 pl.show()
 
-fig.savefig('plotssvm/svmskincgm101')
+fig.savefig('plotssvm/svmskincgm117')
