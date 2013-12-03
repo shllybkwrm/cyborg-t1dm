@@ -17,7 +17,7 @@ def dateconv(date_str):
 def t1dmread(file_name):
     dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm', 'numlabel'),
                         'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int, np.int]})
-    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
+    data = np.loadtxt(file_name, delimiter=';', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
     return data
 
 
@@ -33,11 +33,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 
 #--------------------------------------------------
 
-# If no plots folder exists, make a folder to store all of the plots
-if not os.path.exists('plots'):
-    os.mkdir('plots')
-
-data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed2.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -49,6 +45,7 @@ normskintemp = skinTemp - airTemp
 
 samples = len(timeStamps)/60
 lenTrain = np.ceil(0.8*samples)
+lenTrainFull = 0.8*len(timeStamps)
 trainSamplesBegin = []
 trainSamplesEnd = []
 trainLabels = []
@@ -65,18 +62,23 @@ for index,item in np.ndenumerate(normskintemp):
         trainTestLabels.append(numlabels[index])
         timeStart.append(timeStamps[index])
 
+# Arrays containing just the first and last readings of each time segment (and corresponding data)
 training = np.column_stack([trainSamplesBegin[0:int(lenTrain)],trainSamplesEnd[0:int(lenTrain)]])
 trainLabels = trainTestLabels[0:int(lenTrain)]
 test = np.column_stack([trainSamplesBegin[(int(lenTrain)+1):samples],trainSamplesEnd[(int(lenTrain)+1):samples]])
 testLabels = trainTestLabels[(int(lenTrain)+1):samples]
-
 test_timeStamps = timeStart[int(lenTrain)+1:samples]
+
+# Arrays with all data
+longTestSt = normskintemp[(int(lenTrainFull) + 1):len(normskintemp)]
+longTestTime = timeStamps[(int(lenTrainFull) + 1):len(timeStamps)]
+longTestCGM = cgm[(int(lenTrainFull) + 1):len(cgm)]
 
 # For training SVM: first skintemp value in interval, last skintemp value in interval, and label (1, 0, -1).
 
 model = svm.SVC()
 model.fit(training,trainLabels)
-groups_training = model.predict(training)
+group_training = model.predict(training)
 
 group_test = model.predict(test)
 print("Test Set Groups")
@@ -84,7 +86,7 @@ print("Test Set Groups")
 test_results = np.empty_like(group_test,dtype="S10")
 state_contents = np.empty_like(group_test,dtype=np.int)
 for idx,item in np.ndenumerate(group_test):
-    if item == -1:
+    if item == 2:
         np.put(test_results,idx,'falling',mode='clip')
         np.put(state_contents,idx,item,mode='clip')
     elif item == 1:
@@ -99,20 +101,24 @@ print("Results:\n")
 print(results)
 
 # If no plots folder exists, make a folder to store all of the plots
-if not os.path.exists('plots'):
-    os.mkdir('plots')
+if not os.path.exists('plotssvm'):
+    os.mkdir('plotssvm')
 
 fig = pl.figure()
 skinTemp = fig.add_subplot(211)
-pl.ylabel('Norm Skin Temp')
+pl.ylabel('Skin Temp - Ambient Temp')
 cgmFig = fig.add_subplot(212)
-pl.ylabel('Estimated CGM BG')
+pl.ylabel('CGM BG')
 '''
 for i in range(3):
     idx = (group_test == i)
     skinTemp.plot_date(timeStamps[idx],normskintemp[idx],'.',label="Class %d" % i)
     cgmFig.plot_date(timeStamps[idx],cgm[idx],'.',label="Class %d" % i)
 '''
+
+#test_st = normskintemp[int(lenTrain)+1:samples]
+#test_cgm = cgm[int(lenTrain)+1:samples]
+
 for i in range(0,len(group_test)):
     start = i*60
     stop = (i+1)*60
@@ -122,11 +128,11 @@ for i in range(0,len(group_test)):
     elif group_test[i]==1:
         color = 'r.'
         Label = 'Rising'
-    elif group_test[i]==-1:
+    elif group_test[i]==2:
         color = 'b.'
         Label = 'Falling'
-    skinTemp.plot_date(timeStamps[start:stop],normskintemp[start:stop],color,label=Label)
-    cgmFig.plot_date(timeStamps[start:stop],cgm[start:stop],color,label=Label)
+    skinTemp.plot_date(longTestTime[start:stop],longTestSt[start:stop],color,label=Label)
+    cgmFig.plot_date(longTestTime[start:stop],longTestCGM[start:stop],color,label=Label)
 pl.xlabel('Time')
 fig.autofmt_xdate()
 
@@ -138,4 +144,4 @@ cgmFig.legend( [g,r,b], ['Stable','Rising','Falling'] )
 
 pl.show()
 
-fig.savefig('plots/svmskincgm101')
+fig.savefig('plotssvm/svmskincgm101')
