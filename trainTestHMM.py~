@@ -90,6 +90,17 @@ pl.xlabel('Time')
 fig.autofmt_xdate()
 for i in range(n_components):
     idx = (hidden_states_test == i)
+<<<<<<< HEAD
+    skinTemp.plot_date(timeStamps[idx],normskintemp[idx],'.',label="Hidden State %d" % i)
+    cgmFig.plot_date(timeStamps[idx],cgm[idx],'.',label="Hidden State %d" % i)
+cgmFig.legend()
+'''
+r = pl.Rectangle((0, 0), 1, 1, fc="r")
+g = pl.Rectangle((0, 0), 1, 1, fc="g")
+b = pl.Rectangle((0, 0), 1, 1, fc="b")
+cgmFig.legend( [g,r,b], ['Stable','Rising','Falling'] )
+'''
+=======
     skinTemp.plot_date(test_timeStamps[idx],test_st[idx],'.',label="Hidden State %d" % i)
     cgmFig.plot_date(test_timeStamps[idx],test_cgm[idx],'.',label="Hidden State %d" % i)
 skinTemp.legend()
@@ -99,8 +110,6 @@ skinTemp = fig.add_subplot(211)
 pl.ylabel('Skin Temp - Ambient Temp')
 cgmFig = fig.add_subplot(212)
 pl.ylabel('CGM BG')
-
-import pdb; pdb.set_trace()
 
 for i in range(0,len(state_contents)):
 #    start = i*60
@@ -124,6 +133,7 @@ r = pl.Rectangle((0, 0), 1, 1, fc="r")
 g = pl.Rectangle((0, 0), 1, 1, fc="g")
 b = pl.Rectangle((0, 0), 1, 1, fc="b")
 cgmFig.legend( [g,r,b], ['Hidden State 0','Hidden State 1','Hidden State 2'] )
+>>>>>>> da501603d054eb204d125d0da388f46d9fcb966f
 
 pl.show()
 

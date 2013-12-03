@@ -133,7 +133,6 @@ r = pl.Rectangle((0, 0), 1, 1, fc="r")
 g = pl.Rectangle((0, 0), 1, 1, fc="g")
 b = pl.Rectangle((0, 0), 1, 1, fc="b")
 cgmFig.legend( [g,r,b], ['Hidden State 0','Hidden State 1','Hidden State 2'] )
->>>>>>> da501603d054eb204d125d0da388f46d9fcb966f
 
 pl.show()
 

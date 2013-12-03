@@ -73,7 +73,7 @@ test_timeStamps = timeStart[int(lenTrain)+1:samples]
 longTestSt = normskintemp[(int(lenTrainFull) + 1):len(normskintemp)]
 longTestTime = timeStamps[(int(lenTrainFull) + 1):len(timeStamps)]
 longTestCGM = cgm[(int(lenTrainFull) + 1):len(cgm)]
-import pdb; pdb.set_trace()
+
 # For training SVM: first skintemp value in interval, last skintemp value in interval, and label (1, 0, -1).
 
 model = svm.SVC()
