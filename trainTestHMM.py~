@@ -19,12 +19,12 @@ def dateconv(date_str):
 def t1dmread(file_name):
     dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm', 'numlabel'),
                         'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int, np.int]})
-    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
+    data = np.loadtxt(file_name, delimiter=';', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
     return data
 
 #--------------------------------------------------
 
-data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed2.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -60,7 +60,7 @@ print("Test Set Hidden States")
 test_results = np.empty_like(hidden_states_test,dtype="S10")
 state_contents = np.empty_like(hidden_states_test)
 for idx,item in np.ndenumerate(hidden_states_test):
-    if item == -1:
+    if item == 2:
         np.put(test_results,idx,'falling',mode='clip')
         np.put(state_contents,idx,item,mode='clip')
     elif item == 1:
@@ -80,7 +80,7 @@ if not os.path.exists('plotshmm'):
 
 test_st = normskintemp[int(lenTrain)+1:lenData]
 test_cgm = cgm[int(lenTrain)+1:lenData]
-
+'''
 fig = pl.figure()
 skinTemp = fig.add_subplot(211)
 pl.ylabel('Skin Temp - Ambient Temp')
@@ -96,28 +96,35 @@ skinTemp.legend()
 '''
 fig = pl.figure()
 skinTemp = fig.add_subplot(211)
-pl.ylabel('Norm Skin Temp')
+pl.ylabel('Skin Temp - Ambient Temp')
 cgmFig = fig.add_subplot(212)
 pl.ylabel('CGM BG')
 
-for i in range(0,len(hidden_states_test)):
-    start = i*60
-    stop = (i+1)*60
-    if hidden_states_test[i]==0:
+import pdb; pdb.set_trace()
+
+for i in range(0,len(state_contents)):
+#    start = i*60
+#    stop = (i+1)*60
+    if state_contents[i]==0:
         color = 'g.'
-        Label = 'Stable'
-    elif hidden_states_test[i]==1:
+        Label = 'Hidden State 0'
+    elif state_contents[i]==1:
         color = 'r.'
-        Label = 'Rising'
-    elif hidden_states_test[i]==-1:
+        Label = 'Hidden State 1'
+    elif state_contents[i]==2:
         color = 'b.'
-        Label = 'Falling'
-#    import pdb; pdb.set_trace()
-    skinTemp.plot_date(test_timeStamps[start:stop],normskintemp[start:stop],color,label=Label)
-    cgmFig.plot_date(test_timeStamps[start:stop],cgm[start:stop],color,label=Label)
+        Label = 'Hidden State 2'
+    skinTemp.plot_date(test_timeStamps[i],test_st[i],color,label=Label)
+    cgmFig.plot_date(test_timeStamps[i],test_cgm[i],color,label=Label)
 pl.xlabel('Time')
 fig.autofmt_xdate()
-'''
+
+#handles, labels = skinTemp.get_legend_handles_labels()
+r = pl.Rectangle((0, 0), 1, 1, fc="r")
+g = pl.Rectangle((0, 0), 1, 1, fc="g")
+b = pl.Rectangle((0, 0), 1, 1, fc="b")
+cgmFig.legend( [g,r,b], ['Hidden State 0','Hidden State 1','Hidden State 2'] )
+
 pl.show()
 
 fig.savefig('plotshmm/hmmskincgm101')
