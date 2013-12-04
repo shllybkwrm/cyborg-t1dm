@@ -53,6 +53,6 @@ fig.autofmt_xdate()
 pl.ylabel('CGM BG')
 fig.autofmt_xdate()
 
-#pl.xlabel('Time')
+pl.xlabel('Time')
 pl.show()
 fig.savefig('plots/bgstsubplot101')
