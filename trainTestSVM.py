@@ -34,6 +34,9 @@ def stuffPlot(timestamps,func,title,ylabel):
 #--------------------------------------------------
 
 data = t1dmread('trimmedDataFiles/MYFILE103_trimmed.csv')
+figOutputFilename = 'plotssvm/svmskincgm103'
+csvOutputFilename = 'resultComparison/skincgm-svm103.csv'
+
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -150,7 +153,8 @@ k = pl.Rectangle((0, 0), 1, 1, fc="k")
 cgmFig.legend( [c,m,k], ['Group 0','Group 1','Group 2'] )
 
 pl.show()
-fig.savefig('plotssvm/svmskincgm103')
+#fig.savefig('plotssvm/svmskincgm103')
+fig.savefig(figOutputFilename)
 
 
 #print(groupAssignment)
@@ -163,4 +167,6 @@ longTestLabels = longTestLabels[:(len(groupAssignment))]
 #print(len(longTestLabels))
 
 testDataOut = np.column_stack( [ longTestCGM, longTestLabels, groupAssignment ] )
-np.savetxt("resultComparison/skincgm-svm103.csv", testDataOut, '%d', delimiter=",")
+
+#np.savetxt("resultComparison/skincgm-svm103.csv", testDataOut, '%d', delimiter=",")
+np.savetxt(csvOutputFilename, testDataOut, '%d', delimiter=",")

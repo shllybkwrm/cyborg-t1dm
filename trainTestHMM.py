@@ -24,7 +24,10 @@ def t1dmread(file_name):
 
 #--------------------------------------------------
 
-data = t1dmread('trimmedDataFiles/MYFILE101_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE103_trimmed.csv')
+figOutputFilename = 'plotshmm/hmmskincgm103'
+csvOutputFilename = 'resultComparison/skincgm-hmm103.csv'
+
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -146,10 +149,9 @@ for index, item in enumerate(test_results):
         print(item)
 
 pl.show()
-
-fig.savefig('plotshmm/hmmskincgm101')
+fig.savefig(figOutputFilename)
 
 
 testDataOut = np.column_stack( [ test_cgm, test_labels, state_contents ] )
-np.savetxt("resultComparison/skincgm-hmm101.csv", testDataOut, '%d', delimiter=",")
+np.savetxt(csvOutputFilename, testDataOut, '%d', delimiter=",")
 
