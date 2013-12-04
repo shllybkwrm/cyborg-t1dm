@@ -1,3 +1,8 @@
+For the data files for the following patients: 103
+
+Before running trimCSV.py, please adjust the array indices; data file 103 has one less column in all except the first row.
+
+
 For the data files for the following patients: 106, 113, 116
 
 Before running trainTestHMM.py or trainTestSVM.py, please change line 22 (in trainTestHMM.py) or line 20 (in trainTestSVM.py) to the following:
