@@ -48,10 +48,10 @@ normskintemp = skinTemp - airTemp
 fig = pl.figure()
 
 skinTemp = fig.add_subplot(211)
-pl.ylabel('Normalized Skin Temp')
+pl.ylabel('Skin Temp - Ambient Temp')
 
 cgmFig = fig.add_subplot(212)
-pl.ylabel('CGM Blood Glucose')
+pl.ylabel('CGM BG')
 for i in range(0,len(cgm)):
     if cgmDir[i]==0:
         cgmFig.plot(timeStamps[i],cgm[i],'g.')

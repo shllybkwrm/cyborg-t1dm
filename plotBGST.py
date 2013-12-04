@@ -34,7 +34,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 if not os.path.exists('plots'):
     os.mkdir('plots')
 
-data = t1dmread('trimmedDataFiles/MYFILE116_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE101_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -77,5 +77,5 @@ fig.autofmt_xdate()
 pl.xlabel('Time')
 
 pl.show()
-fig.savefig('plots/bgstsubplot116')
+fig.savefig('plots/bgstsubplot101')
 
