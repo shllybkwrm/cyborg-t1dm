@@ -17,7 +17,7 @@ filename = str(sys.argv[1])
 #filename = 'MYFILE101.no_gaps'
 print "----- Trimming file", filename, "-----"
 
-f = open('untrimmedDataFiles/'+filename+'.no_gaps.csv', 'rb')
+f = open('diabetesFilesNoHeaders/'+filename+'.no_gaps.csv', 'rb')
 csvReader = csv.reader(f, dialect='excel')
 
 g = open('trimmedDataFiles/'+filename+'_trimmed.csv', 'wb')

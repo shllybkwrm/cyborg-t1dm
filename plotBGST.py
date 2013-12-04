@@ -31,8 +31,8 @@ def stuffPlot(timestamps,func,title,ylabel):
 #--------------------------
 
 # If no plots folder exists, make a folder to store all of the plots
-if not os.path.exists('plots'):
-    os.mkdir('plots')
+if not os.path.exists('plotsRawData'):
+    os.mkdir('plotsRawData')
 
 data = t1dmread('trimmedDataFiles/MYFILE108_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
@@ -77,5 +77,5 @@ fig.autofmt_xdate()
 pl.xlabel('Time')
 
 pl.show()
-fig.savefig('plots/bgstsubplot108')
+fig.savefig('plotsRawData/bgstsubplot108')
 
