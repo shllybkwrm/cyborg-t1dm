@@ -47,15 +47,18 @@ print len(csvData_trimmed[0]), "data labels"
 print len(csvData[0]), "columns in csv data"
 
 for k in range(1,len(csvData)):
-    row = csvData[k][:-1]
+    if len(csvData_trimmed[0]) >= len(csvData[0]):
+        row = csvData[k]
+    else:
+        row = csvData[k][:-1]
     #row = csvData[k]
     if 'inf' in row:
         i += 1
         #print row
         #csvData.remove(row)
         #csvData.pop( csvData.index(row) )
-    elif (row[-2] == '-1') or (row[-2] == '0'):
-    #elif (row[-1] == '-1') or (row[-1] == '0'):
+    elif (row[27] == '-1') or (row[27] == '0'):
+    #elif (row[-2] == '-1') or (row[-2] == '0'):
         j += 1
         #print row
         #csvData.remove(row)
@@ -79,7 +82,7 @@ for row in csvData_trimmed:
         cgmData.append(int(row[-2]))
 #print cgmData[:100]
 
-cgmInterval = 2*30 #2 measurements/minute
+cgmInterval = 2*30  # at 2 measurements/minute
 intervals = int(len(csvData_trimmed)/cgmInterval)
 cgmDir = []
 
