@@ -139,6 +139,11 @@ g = pl.Rectangle((0, 0), 1, 1, fc="g")
 b = pl.Rectangle((0, 0), 1, 1, fc="b")
 cgmFig.legend( [g,r,b], ['Hidden State 0','Hidden State 1','Hidden State 2'] )
 
+# Prints the HMM's label result for each time segment
+for index, item in enumerate(test_results):
+    if np.mod(index,60) == 0:
+        print(item)
+
 pl.show()
 
 fig.savefig('plotshmm/hmmskincgm101')
@@ -146,3 +151,4 @@ fig.savefig('plotshmm/hmmskincgm101')
 
 testDataOut = np.column_stack( [ test_cgm, test_labels, state_contents ] )
 np.savetxt("resultComparison/skincgm-hmm101.csv", testDataOut, '%d', delimiter=",")
+
