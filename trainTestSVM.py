@@ -17,7 +17,10 @@ def dateconv(date_str):
 def t1dmread(file_name):
     dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm', 'numlabel'),
                         'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int, np.int]})
-    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
+    if file_name=='trimmedDataFiles/MYFILE106_trimmed.csv' or file_name=='trimmedDataFiles/MYFILE113_trimmed.csv' or file_name=='trimmedDataFiles/MYFILE116_trimmed.csv':
+        data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,5,8,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
+    else:
+        data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
     return data
 
 
