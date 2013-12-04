@@ -1,3 +1,4 @@
+
 HMM Percent Correct:
 
 101:
@@ -7,6 +8,8 @@ HMM Percent Correct:
 102:
 448/1475 = 0.303728814
 30.37%
+
+
 
 104:
 368/1629 = 0.225905463
@@ -61,63 +64,71 @@ HMM Percent Correct:
 17.88%
 
 
-SVM Percent Correct:
-101:
-519/1620 = 0.32037037
-32.04%
 
-102:
-538/1380 = 0.397101449
+
+SVM Percent Correct:
+101: (pretty good correlation)
+897/1620 = 0.553703704
+55.37%
+
+102: (only 2 groups found in test set, and they don't look well-trained)
+548/1380 = 0.397101449
 39.71%
 
-104:
-764/1560 = 0.48974359
-48.97%
+103: (only two groups in test set, correlation not good, but skin temp and BG don't seem to be correlating well either)
+972/1980 = 0.490909091
+49.09% 
 
-105:
-552/1800 = 0.306666667
-30.67%
+104: (only two groups in test set, and correlation not meaningful)
+512/1560 = 0.328205128
+32.82%
 
-106:
+105: (only two groups in test set, and correlation is bad)
+444/1800 = 0.246666667
+24.67%
+
+106: (only two groups in test set; there appears to be some correlation, but it's more change in BG/stable rather than rising/falling/stable.
 764/1680 = 0.454761905
 45.48%
 
-107:
-702/1440 = 0.4875
-48.75%
+107: (three groups, but barely. Correlation not good. Appears to have two groups for "stable", though I had to pick one to be something else to calculate this)
+306/1440 = 0.2125
+21.25%
 
-108:
-360/1560 = 0.230769231
-23.08%
+108: (horrible; all group 2, but skin temp was really noisy)
+540/1560 = 0.346153846
+34.62%
 
-109:
-285/1320 = 0.215909091
-21.59%
+109: (only 2 groups; unclear)
+855/1320 = 0.647727273
+64.77%
 
-111:
-778/1560 = 0.498717949
-49.87% 
+111: (non-autoimmune case; correlation is terrible and only two groups found in test set)
+393/1560 = 0.251923077
+25.19% 
 
-112:
-536/1860 = 0.288172043
-28.82%
+112: (only two groups, and not clear ones, but skin temperature is noisy and does not appear to correlate well with BG here.)
+782/1860 = 0.420430108
+42.04%
 
-113:
-1200/1740 = 0.689655172
-68.97%
+113: (three groups, but barely; group 0 dominates. Groups do not appear well-trained.)
+300/1740 = 0.172413793
+17.24%
 
-114: 
-908/1260 = 0.720634921
-72.06% 
+114: (only two groups in test set, not very meaningful)
+180/1260 = 0.142857143
+14.29% 
 
-115:
-486/1680 = 0.289285714
-28.93%
+115: (three groups, and they appear to have some meaning, but still not clearly defined)
+508/1680 = 0.302380952
+30.24%
 
-116:
-660/1680 = 0.392857143
-39.29% 
+116: (only two groups in test set, and skin temperature data is very noisy)
+570/1680 = 0.339285714
+33.93% 
 
-117:
-180/601 = 0.3
-30.00%
+117: (noisy skin temp data; any choice of groups would be essentially random. Also had very few data points. )
+111/601 = 0.185
+18.5%
+
+=IF(AND(C1=2,B1=0),TRUE,IF(AND(C1=1,B1=1),TRUE,IF(AND(C1=0,B1=2),TRUE,FALSE)))
