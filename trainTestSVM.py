@@ -17,7 +17,7 @@ def dateconv(date_str):
 def t1dmread(file_name):
     dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm', 'numlabel'),
                         'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int, np.int]})
-    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
+    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,5,8,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
     return data
 
 
@@ -33,7 +33,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 
 #--------------------------------------------------
 
-data = t1dmread('trimmedDataFiles/MYFILE101_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE116_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -150,7 +150,7 @@ k = pl.Rectangle((0, 0), 1, 1, fc="k")
 cgmFig.legend( [c,m,k], ['Group 0','Group 1','Group 2'] )
 
 pl.show()
-fig.savefig('plotssvm/svmskincgm101')
+fig.savefig('plotssvm/svmskincgm116')
 
 
 #print(groupAssignment)
@@ -163,4 +163,4 @@ longTestLabels = longTestLabels[:(len(groupAssignment))]
 #print(len(longTestLabels))
 
 testDataOut = np.column_stack( [ longTestCGM, longTestLabels, groupAssignment ] )
-np.savetxt("resultComparison/skincgm-svm101.csv", testDataOut, '%d', delimiter=",")
+np.savetxt("resultComparison/skincgm-svm116.csv", testDataOut, '%d', delimiter=",")

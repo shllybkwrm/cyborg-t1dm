@@ -33,7 +33,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 
 #--------------------------------------------------
 
-data = t1dmread('trimmedDataFiles/MYFILE117_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE113_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -75,6 +75,7 @@ test_timeStamps = timeStart[int(lenTrain)+1:samples]
 longTestSt = normskintemp[(int(lenTrainFull) + 1):len(normskintemp)]
 longTestTime = timeStamps[(int(lenTrainFull) + 1):len(timeStamps)]
 longTestCGM = cgm[(int(lenTrainFull) + 1):len(cgm)]
+longTestLabels = numlabels[(int(lenTrainFull) + 1):len(numlabels)]
 
 # For training SVM: first skintemp value in interval, last skintemp value in interval, and label (1, 0, -1).
 
@@ -121,6 +122,8 @@ for i in range(3):
 #test_st = normskintemp[int(lenTrain)+1:samples]
 #test_cgm = cgm[int(lenTrain)+1:samples]
 
+groupAssignment = []
+
 for i in range(0,len(group_test)):
     start = i*60
     stop = (i+1)*60
@@ -135,6 +138,8 @@ for i in range(0,len(group_test)):
         Label = 'Group 2'
     skinTemp.plot_date(longTestTime[start:stop],longTestSt[start:stop],color,label=Label)
     cgmFig.plot_date(longTestTime[start:stop],longTestCGM[start:stop],color,label=Label)
+    groupAssignment.extend( [(group_test[i]) for x in range(60)] )
+
 pl.xlabel('Time')
 fig.autofmt_xdate()
 
@@ -145,5 +150,17 @@ k = pl.Rectangle((0, 0), 1, 1, fc="k")
 cgmFig.legend( [c,m,k], ['Group 0','Group 1','Group 2'] )
 
 pl.show()
+fig.savefig('plotssvm/svmskincgm113')
 
-fig.savefig('plotssvm/svmskincgm117')
+
+#print(groupAssignment)
+#print(len(group_test))
+#print(len(groupAssignment))
+#print(len(longTestCGM))
+
+longTestCGM = longTestCGM[:(len(groupAssignment))]
+longTestLabels = longTestLabels[:(len(groupAssignment))]
+#print(len(longTestLabels))
+
+testDataOut = np.column_stack( [ longTestCGM, longTestLabels, groupAssignment ] )
+np.savetxt("resultComparison/skincgm-svm113.csv", testDataOut, '%d', delimiter=",")
