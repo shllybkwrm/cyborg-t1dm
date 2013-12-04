@@ -22,7 +22,7 @@ The CGM data is color-coded by the slope of each interval: green = stable,
 red = rising, and blue = falling.  The plot image is saved in the folder
  'plotsRawData'.
  
-(4) testTrainHMM.py
+(4) trainTestHMM.py
 This program uses scikit-learn and matplotlib to plot the results of training an
 HMM on 80% of data obtained from the trimmed CSV file specified in the top of
 the main code.  The HMM is tested on the remaining 20% and that data is 
@@ -31,7 +31,7 @@ in the folder 'plotshmm'.
 Additionally, the CGM data, original labels, and assigned states are printed
 to a CSV file in the folder 'resultsEvaluation' for analysis.
  
-(5) testTrainSVM.py
+(5) trainTestSVM.py
 This program uses scikit-learn and matplotlib to plot the results of training 
 an SVM on 80% of data obtained from the trimmed CSV file specified in the top
 of the main code.  The SVM is tested on the remaining 20% and that data is 
