@@ -15,7 +15,7 @@ def dateconv(date_str):
 def t1dmread(file_name):
     dtypes = np.dtype({ 'names' : ('timestamp', 'skin temp', 'air temp', 'steps', 'lying down', 'sleep', 'physical activity', 'energy', 'sedentary', 'moderate', 'vigorous', 'very vigorous', 'mets', 'hr', 'cgm', 'cgm dir'),
                         'formats' : [datetime, np.float, np.float, np.int, np.int, np.float, np.int, np.float, np.int, np.int, np.int, np.int, np.float, np.int, np.int, np.int] })
-    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,7,10,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
+    data = np.loadtxt(file_name, delimiter=',', skiprows=1,converters = { 0 : dateconv },usecols=(0,5,8,13,17,18,19,20,21,22,23,24,25,26,27,28), dtype=dtypes)
     return data
 
 def stuffPlot(timestamps,func,title,ylabel):
@@ -34,7 +34,7 @@ def stuffPlot(timestamps,func,title,ylabel):
 if not os.path.exists('plots'):
     os.mkdir('plots')
 
-data = t1dmread('trimmedDataFiles/MYFILE101.no_gaps_trimmed.csv')
+data = t1dmread('trimmedDataFiles/MYFILE116_trimmed.csv')
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
 airTemp = np.array(data['air temp'])
@@ -46,11 +46,12 @@ normskintemp = skinTemp - airTemp
 
 
 fig = pl.figure()
-#pl.title('CGM Reading and Normalized Skin Temperature for the same subject')
-cgmFig = fig.add_subplot(211)
-pl.ylabel('CGM Blood Glucose')
-skinTemp = fig.add_subplot(212)
-pl.ylabel('Normalized Skin Temp')
+
+skinTemp = fig.add_subplot(211)
+pl.ylabel('Skin Temp - Ambient Temp')
+
+cgmFig = fig.add_subplot(212)
+pl.ylabel('CGM BG')
 for i in range(0,len(cgm)):
     if cgmDir[i]==0:
         cgmFig.plot(timeStamps[i],cgm[i],'g.')
@@ -58,11 +59,10 @@ for i in range(0,len(cgm)):
         cgmFig.plot(timeStamps[i],cgm[i],'r.')
     elif cgmDir[i]==-1:
         cgmFig.plot(timeStamps[i],cgm[i],'b.')
-#cgmFig.plot(timeStamps,cgm,'o')
 fig.autofmt_xdate()
 
-skinTemp = fig.add_subplot(212)
-pl.ylabel('Normalized Skin Temp')
+#skinTemp = fig.add_subplot(212)
+#pl.ylabel('Normalized Skin Temp')
 '''
 for i in range(0,len(cgm)):
     if cgmDir[i]==0:
@@ -77,5 +77,5 @@ fig.autofmt_xdate()
 pl.xlabel('Time')
 
 pl.show()
-fig.savefig('plots/bgstsubplot')
+fig.savefig('plots/bgstsubplot116')
 
