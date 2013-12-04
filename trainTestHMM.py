@@ -139,6 +139,7 @@ g = pl.Rectangle((0, 0), 1, 1, fc="g")
 b = pl.Rectangle((0, 0), 1, 1, fc="b")
 cgmFig.legend( [g,r,b], ['Hidden State 0','Hidden State 1','Hidden State 2'] )
 
+
 # Prints the HMM's label result for each time segment
 for index, item in enumerate(test_results):
     if np.mod(index,60) == 0:
