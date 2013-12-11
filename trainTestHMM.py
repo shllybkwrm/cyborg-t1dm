@@ -161,9 +161,9 @@ cgmFig.legend( hl.values(), hl.keys() )
 
 
 # Prints the HMM's label result for each time segment
-for index, item in enumerate(test_results):
-    if np.mod(index,60) == 0:
-        print(item)
+#for index, item in enumerate(test_results):
+#    if np.mod(index,60) == 0:
+#        print(item)
 
 pl.show()
 fig.savefig(figOutputFilename)
