@@ -36,9 +36,9 @@ def stuffPlot(timestamps,func,title,ylabel):
 
 #--------------------------------------------------
 
-data = t1dmread('trimmedDataFiles/MYFILE103_trimmed.csv')
-figOutputFilename = 'plotssvm/svmskincgm103'
-csvOutputFilename = 'resultComparison/skincgm-svm103.csv'
+data = t1dmread('trimmedDataFiles/MYFILE101_trimmed.csv')
+figOutputFilename = 'plotssvm/svmskincgm101'
+csvOutputFilename = 'resultComparison/skincgm-svm101.csv'
 
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
@@ -134,10 +134,10 @@ for i in range(0,len(group_test)):
     start = i*60
     stop = (i+1)*60
     if group_test[i]==0:
-        color = 'c.'
+        color = 'co'
         Label = 'Group 0'
     elif group_test[i]==1:
-        color = 'm.'
+        color = 'm^'
         Label = 'Group 1'
     elif group_test[i]==2:
         color = 'k.'
@@ -150,10 +150,17 @@ pl.xlabel('Time')
 fig.autofmt_xdate()
 
 #handles, labels = skinTemp.get_legend_handles_labels()
-c = pl.Rectangle((0, 0), 1, 1, fc="c")
-m = pl.Rectangle((0, 0), 1, 1, fc="m")
-k = pl.Rectangle((0, 0), 1, 1, fc="k")
-cgmFig.legend( [c,m,k], ['Group 0','Group 1','Group 2'] )
+#c = pl.Rectangle((0, 0), 1, 1, fc="c")
+#m = pl.Rectangle((0, 0), 1, 1, fc="m")
+#k = pl.Rectangle((0, 0), 1, 1, fc="k")
+#cgmFig.legend( [c,m,k], ['Group 0','Group 1','Group 2'] )
+handles, labels = skinTemp.get_legend_handles_labels()
+import operator
+hl = {}
+for key,value in zip(labels,handles):
+    if key not in hl.keys():
+        hl[key] = value
+cgmFig.legend( hl.values(), hl.keys() )
 
 pl.show()
 #fig.savefig('plotssvm/svmskincgm103')

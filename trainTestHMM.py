@@ -27,9 +27,9 @@ def t1dmread(file_name):
 
 #--------------------------------------------------
 
-data = t1dmread('trimmedDataFiles/MYFILE103_trimmed.csv')
-figOutputFilename = 'plotshmm/hmmskincgm103'
-csvOutputFilename = 'resultComparison/skincgm-hmm103.csv'
+data = t1dmread('trimmedDataFiles/MYFILE101_trimmed.csv')
+figOutputFilename = 'plotshmm/hmmskincgm101'
+csvOutputFilename = 'resultComparison/skincgm-hmm101.csv'
 
 timeStamps = np.array(data['timestamp'])
 skinTemp = np.array(data['skin temp'])
@@ -126,24 +126,38 @@ for i in range(0,len(state_contents)):
 #    start = i*60
 #    stop = (i+1)*60
     if state_contents[i]==0:
-        color = 'g.'
+        color = 'r^'
+        #if i%10:
+        #    color = 'r,'
+        #else:
+        #    color = 'rd'
         Label = 'Hidden State 0'
     elif state_contents[i]==1:
-        color = 'r.'
+        color = 'g.'
         Label = 'Hidden State 1'
     elif state_contents[i]==2:
-        color = 'b.'
+        color = 'bo'
         Label = 'Hidden State 2'
     skinTemp.plot_date(test_timeStamps[i],test_st[i],color,label=Label)
     cgmFig.plot_date(test_timeStamps[i],test_cgm[i],color,label=Label)
 pl.xlabel('Time')
 fig.autofmt_xdate()
 
-#handles, labels = skinTemp.get_legend_handles_labels()
-r = pl.Rectangle((0, 0), 1, 1, fc="r")
-g = pl.Rectangle((0, 0), 1, 1, fc="g")
-b = pl.Rectangle((0, 0), 1, 1, fc="b")
-cgmFig.legend( [g,r,b], ['Hidden State 0','Hidden State 1','Hidden State 2'] )
+#r = pl.Rectangle((0, 0), 1, 1, fc="r")
+#g = pl.Rectangle((0, 0), 1, 1, fc="g")
+#b = pl.Rectangle((0, 0), 1, 1, fc="b")
+#cgmFig.legend( [r,g,b], ['Hidden State 0','Hidden State 1','Hidden State 2'] )
+handles, labels = skinTemp.get_legend_handles_labels()
+#print(handles[:5], set(labels))
+import operator
+hl = {}
+for key,value in zip(labels,handles):
+    if key not in hl.keys():
+        hl[key] = value
+hl2 = sorted(hl, key=operator.itemgetter(1))
+#handles2, labels2 = zip(*hl)
+cgmFig.legend( hl.values(), hl.keys() )
+#cgmFig.legend( handles2, labels2 )
 
 
 # Prints the HMM's label result for each time segment
