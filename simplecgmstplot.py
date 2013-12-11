@@ -45,10 +45,10 @@ normskintemp = skinTemp - airTemp
 
 fig = pl.figure()
 skinTemp = fig.add_subplot(211)
-pl.plot(timeStamps,normskintemp,'.')
+pl.plot(timeStamps,normskintemp,'-')
 pl.ylabel('Skin Temp - Ambient Temp')
 cgmFig = fig.add_subplot(212)
-pl.plot(timeStamps,cgm,'.')
+pl.plot(timeStamps,cgm,'--')
 fig.autofmt_xdate()
 pl.ylabel('CGM BG')
 fig.autofmt_xdate()
